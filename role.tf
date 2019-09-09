@@ -4,11 +4,38 @@ provider "aws" {
   version = "~> 2.0"
   region  = "us-east-1"
 }
+#-------------------------------
+
+# aws_iam_role_policy
+resource "aws_iam_role_policy" "lambda_charles_policy" {
+    name = "lambda_charles_policy"
+    role = "${aws_iam_role.lambda_cloudWatch_access.id}"
+  
+    policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+}
+
+
 
 
 #-------------------------------
 
-# Role
+# aws_iam_role
 
 resource "aws_iam_role" "lambda_cloudWatch_access" {
   name = "lambda_cloudWatch_access",
