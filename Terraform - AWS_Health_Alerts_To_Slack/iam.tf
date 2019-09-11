@@ -7,7 +7,7 @@ provider "aws" {
 #-------------------------------
 
 # aws_iam_role_policy
-resource "aws_iam_role_policy" "lambda_charles_policy" {
+resource "aws_iam_role_policy" "lambda_policy" {
     name = "lambda_charles_policy"
     role = "${aws_iam_role.lambda_cloudWatch_access.id}"
   
