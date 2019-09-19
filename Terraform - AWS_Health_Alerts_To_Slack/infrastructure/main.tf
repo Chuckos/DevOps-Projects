@@ -5,8 +5,8 @@ provider "aws" {
   region  = "us-east-1"
 }
 #-------------------------------
-
 # aws_iam_role_policy
+
 resource "aws_iam_role_policy" "lambda_policy" {
     name = "lambda_charles_policy"
     role = "${aws_iam_role.lambda_cloudWatch_access.id}"
@@ -34,7 +34,6 @@ EOF
 
 
 #-------------------------------
-
 # aws_iam_role
 
 resource "aws_iam_role" "lambda_cloudWatch_access" {
@@ -63,6 +62,8 @@ EOF
   }
 }
 
+#-------------------------------
+# aws_cloudwatch event rule
 resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
     name        = "capture-aws-service-health-alerts"
     description = "Rule created to pick up any AWS personal health reports and then send to an email group via SNS topic"
@@ -70,7 +71,7 @@ resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
   event_pattern = <<PATTERN
 {
   "source": [
-    "aws.health";
+    "aws.health"
   ]
 }
 PATTERN
