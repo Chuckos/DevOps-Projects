@@ -1,15 +1,14 @@
 # Specify the provider and AWS access details
 provider "aws" {
   profile = "${var.aws_profile}"
-  version = "${var.provider_version}"
+  version = "~> 2.0"
   region  = "${var.aws_region}"
 }
-#-------------------------------
-# aws_iam_lambda_role_policy
-#-------------------------------
 
+# create iam lambda role policy
 resource "aws_iam_role_policy" "lambda_policy" {
-    name = "lambda_charles_policy"
+    
+    name = "${var.lambda_policy_name}"
     role = "${aws_iam_role.lambda_cloudWatch_access.id}"
   
     policy = <<EOF
@@ -31,14 +30,10 @@ EOF
 
 }
 
-#-------------------------------
-# aws_iam_lambda_role
-#-------------------------------
-
+# Create lambda role via iam service
 resource "aws_iam_role" "lambda_cloudWatch_access" {
-  name = "lambda_cloudWatch_access"
-  description = "lambda to access cloudwatch events and sns"
-
+  name = "${var.iam_role_name}"
+  description = "${var.iam_role_description}"
 
   assume_role_policy = <<EOF
 {
@@ -57,7 +52,7 @@ EOF
 
   tags = {
     cost = "evrythng"
-    project = "terraform"
+    project = "aws-health-alert"
   }
 }
 

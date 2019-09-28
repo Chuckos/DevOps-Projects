@@ -13,3 +13,23 @@ variable "aws_profile" {
     default = "default"
 }
 
+variable "lambda_policy_name" {
+    description = "name of lambda policy"
+    default = "lambda_policy_for_lambda_role"
+  
+}
+
+variable "iam_role_name" {
+    description = "name of iam role for lambda"
+    default = "lambda_cloudWatch_access"
+  
+}
+
+variable "iam_role_description" {
+    description = "the role/purpose of the iam role created for lambda"
+    default = "lambda to access cloudwatch events and sns"
+  
+}
+
+
+
