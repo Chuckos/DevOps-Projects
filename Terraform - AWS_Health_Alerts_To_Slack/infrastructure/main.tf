@@ -1,11 +1,12 @@
-# Configure the AWS Provider
+# Specify the provider and AWS access details
 provider "aws" {
-  profile = "default"
-  version = "~> 2.0"
-  region  = "us-east-1"
+  profile = "${var.aws_profile}"
+  version = "${var.provider_version}"
+  region  = "${var.aws_region}"
 }
 #-------------------------------
-# aws_iam_role_policy
+# aws_iam_lambda_role_policy
+#-------------------------------
 
 resource "aws_iam_role_policy" "lambda_policy" {
     name = "lambda_charles_policy"
@@ -30,14 +31,12 @@ EOF
 
 }
 
-
-
-
 #-------------------------------
-# aws_iam_role
+# aws_iam_lambda_role
+#-------------------------------
 
 resource "aws_iam_role" "lambda_cloudWatch_access" {
-  name = "lambda_cloudWatch_access",
+  name = "lambda_cloudWatch_access"
   description = "lambda to access cloudwatch events and sns"
 
 
@@ -63,7 +62,13 @@ EOF
 }
 
 #-------------------------------
+# Lambda Function
+#-------------------------------
+
+
+#-------------------------------
 # aws_cloudwatch event rule
+#-------------------------------
 resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
     name        = "capture-aws-service-health-alerts"
     description = "Rule created to pick up any AWS personal health reports and then send to an email group via SNS topic"
@@ -76,3 +81,5 @@ resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
 }
 PATTERN
 }
+
+
