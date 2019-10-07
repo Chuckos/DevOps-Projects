@@ -10,7 +10,7 @@ provider "archive" {}
 
 data "archive_file" "lambda_archive" {
   type        = "zip"
-  source      = "${path.module}/lambda/lambda_aws_health_check_function.js"
+  source_file = "${path.module}/lambda/lambda_aws_health_check_function.js"
   output_path = "${path.module}/lambda/lambda_aws_health_check_function.zip"
 }
 
@@ -63,16 +63,15 @@ EOF
   }
 }
 
-# Provision lamba function
+# Provision lambda function
 resource "aws_lambda_function" "deploy-lambda" {
-  source        = "${path.module}/lambda/lambda_aws_health_check_function.zip"
-  filename      = "${path.module}/lambda/"
+  filename      = "${path.module}/lambda/lambda_aws_health_check_function.zip"
   function_name = "health-check-sns-to-slack-test"
   role          = "${aws_iam_role.lambda_cloudWatch_access.arn}"
   handler       = "exports.test"
 
   # source_code_hash = "${filebase64sha256("lambda_function_payload.zip")}"
-  source_code_hash = "${data.archive_file.lambda_archive.ouutput_base64sha256}"
+  source_code_hash = "${data.archive_file.lambda_archive.output_base64sha256}"
   runtime          = "nodejs10.x"
 }
 
