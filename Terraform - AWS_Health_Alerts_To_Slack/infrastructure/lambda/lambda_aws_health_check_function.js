@@ -6,7 +6,8 @@ exports.handler = function(event, context) {
     console.log('From SNS:', event.Records[0].Sns.Message);
 
     var postData = {
-        "channel": "#aws-health-alerts",
+        //ToDo create configuration file
+        "channel": "#aws-health-alerts", 
         "username": " AWS HEALTH REPORT :: NOTIFICATION",
         "text": "*" + event.Records[0].Sns.Subject + "*",
         "icon_emoji": ":aws:"
