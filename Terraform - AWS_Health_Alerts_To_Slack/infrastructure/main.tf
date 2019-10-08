@@ -65,15 +65,38 @@ EOF
 
 # Provision lambda function
 resource "aws_lambda_function" "deploy-lambda" {
-  filename      = "${path.module}/lambda/lambda_aws_health_check_function.zip"
-  function_name = "health-check-sns-to-slack-test"
-  role          = "${aws_iam_role.lambda_cloudWatch_access.arn}"
-  handler       = "exports.test"
-
-  # source_code_hash = "${filebase64sha256("lambda_function_payload.zip")}"
+  filename         = "${path.module}/lambda/lambda_aws_health_check_function.zip"
+  function_name    = "health-check-sns-to-slack-test"
+  role             = "${aws_iam_role.lambda_cloudWatch_access.arn}"
+  handler          = "exports.test"
   source_code_hash = "${data.archive_file.lambda_archive.output_base64sha256}"
   runtime          = "nodejs10.x"
 }
+
+#provision amazon sns topic
+resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
+  name            = "aws-personal-health-alerts-topic"
+  delivery_policy = <<EOF
+{
+  "http": {
+    "defaultHealthyRetryPolicy": {
+      "minDelayTarget": 20,
+      "maxDelayTarget": 20,
+      "numRetries": 3,
+      "numMaxDelayRetries": 0,
+      "numNoDelayRetries": 0,
+      "numMinDelayRetries": 0,
+      "backoffFunction": "linear"
+    },
+    "disableSubscriptionOverrides": false,
+    "defaultThrottlePolicy": {
+      "maxReceivesPerSecond": 1
+    }
+  }
+}
+EOF
+}
+
 
 #-------------------------------
 # aws_cloudwatch event rule
