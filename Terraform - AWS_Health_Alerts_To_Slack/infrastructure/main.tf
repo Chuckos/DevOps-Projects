@@ -97,13 +97,10 @@ resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
 EOF
 }
 
-
-#-------------------------------
-# aws_cloudwatch event rule
-#-------------------------------
+# Provision aws cloudwatch event rule with sns topic target
 resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
-  name        = "capture-aws-service-health-alerts"
-  description = "Rule created to pick up any AWS personal health reports and then send to an email group via SNS topic"
+  name        = "AWS-health-Alerts"
+  description = "Rule created to pick up any AWS personal health reports and then send to a slack channel via SNS topic and lambda function"
 
   event_pattern = <<PATTERN
 {
@@ -113,3 +110,13 @@ resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
 }
 PATTERN
 }
+
+resource "aws_cloudwatch_event_target" "sns" {
+rule      = "${aws_cloudwatch_event_rule.service_health_dashboard.name}"
+target_id = "SendToSNS"
+arn       = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
+}
+
+
+
+
