@@ -97,6 +97,14 @@ resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
 EOF
 }
 
+# provision aws sns topic subscription
+resource "aws_sns_topic_subscription" "user_updates_lambda_target" {
+  topic_arn = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
+  protocol  = "lambda"
+  endpoint  = "${aws_lambda_function.deploy-lambda.arn}"
+}
+
+
 # Provision aws cloudwatch event rule with sns topic target
 resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
   name        = "AWS-health-Alerts"
@@ -112,9 +120,9 @@ PATTERN
 }
 
 resource "aws_cloudwatch_event_target" "sns" {
-rule      = "${aws_cloudwatch_event_rule.service_health_dashboard.name}"
-target_id = "SendToSNS"
-arn       = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
+  rule      = "${aws_cloudwatch_event_rule.service_health_dashboard.name}"
+  target_id = "SendToSNS"
+  arn       = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
 }
 
 
