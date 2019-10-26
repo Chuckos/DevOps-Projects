@@ -8,6 +8,7 @@ provider "aws" {
 # Specify the provider to archive lambda function
 provider "archive" {}
 
+# Archive the lambda function
 data "archive_file" "lambda_archive" {
   type        = "zip"
   source_file = "${path.module}/lambda/lambda_aws_health_check_function.js"
@@ -72,6 +73,16 @@ resource "aws_lambda_function" "deploy-lambda" {
   source_code_hash = "${data.archive_file.lambda_archive.output_base64sha256}"
   runtime          = "nodejs10.x"
 }
+
+resource "aws_lambda_permission" "with_sns" {
+  statement_id = "AllowExecutionFromSNS"
+  action =       "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.deploy-lambda.arn}"
+  principal = "sns.amazonaws.com"
+  source_arn = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
+  
+}
+
 
 #provision amazon sns topic
 resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
