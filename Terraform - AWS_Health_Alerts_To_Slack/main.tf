@@ -74,13 +74,14 @@ resource "aws_lambda_function" "deploy-lambda" {
   runtime          = "nodejs10.x"
 }
 
+# allow sns topic to invoke lambda function
 resource "aws_lambda_permission" "with_sns" {
-  statement_id = "AllowExecutionFromSNS"
-  action =       "lambda:InvokeFunction"
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.deploy-lambda.arn}"
-  principal = "sns.amazonaws.com"
-  source_arn = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
-  
+  principal     = "sns.amazonaws.com"
+  source_arn    = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
+
 }
 
 
