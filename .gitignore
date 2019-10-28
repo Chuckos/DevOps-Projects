@@ -1,9 +1,15 @@
-# Local .terraform directories
+# Ignore Local .terraform directories
 **/.terraform/*
 
-# .tfstate files
+# Ignore .tfstate files
 *.tfstate
 *.tfstate.*
 
-# Crash log files
+# Ignore Crash log files
 crash.log
+
+# Ignore Terraform plan file
+*.out
+
+# Ignore test file for testing lambda in aws console
+testfile.js
