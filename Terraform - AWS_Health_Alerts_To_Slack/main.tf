@@ -14,28 +14,19 @@ data "archive_file" "lambda_archive" {
   source_file = "${path.module}/lambda/lambda_aws_health_check_function.js"
   output_path = "${path.module}/lambda/lambda_aws_health_check_function.zip"
 }
+# render lambda service policy json template file
+data "template_file" "lambda_service_policy" {
+  template = "${file("${path.module}/templates/lambda_service_policy.json")}"
+}
+
 
 # create iam lambda role policy
 resource "aws_iam_role_policy" "lambda_policy" {
-  name = "${var.lambda_policy_name}"
-  role = "${aws_iam_role.lambda_cloudWatch_access.id}"
+  name   = "${var.lambda_policy_name}"
+  role   = "${aws_iam_role.lambda_cloudWatch_access.id}"
+  policy = "${data.template_file.lambda_service_policy.rendered}"
 
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-EOF
+
 }
 
 # Create lambda role via iam service
