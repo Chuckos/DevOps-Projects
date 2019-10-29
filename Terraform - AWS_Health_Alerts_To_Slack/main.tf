@@ -19,11 +19,20 @@ data "template_file" "lambda_service_policy" {
   template = "${file("${path.module}/templates/lambda_service_policy.json")}"
 }
 
-# rener lambda assume role policy
+# render lambda assume role policy
 data "template_file" "lambda_assume_role_policy" {
   template = "${file("${path.module}/templates/lambda_assume_role_policy.json")}"
 }
 
+# render sns service delivery policy
+data "template_file" "sns_service_delivery_policy" {
+  template = "${file("${path.module}/templates/sns_service_delivery_policy.json")}"
+}
+
+# render cloudwatch event pattern
+data "template_file" "service_health_dashboard_cloudwatch_event_pattern" {
+  template = "${file("${path.module}/templates/service_health_dashboard_cloudwatch_event_pattern.json")}"
+}
 
 # create iam lambda role policy
 resource "aws_iam_role_policy" "lambda_policy" {
@@ -70,25 +79,7 @@ resource "aws_lambda_permission" "with_sns" {
 #provision amazon sns topic
 resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
   name            = "aws-personal-health-alerts-topic"
-  delivery_policy = <<EOF
-{
-  "http": {
-    "defaultHealthyRetryPolicy": {
-      "minDelayTarget": 20,
-      "maxDelayTarget": 20,
-      "numRetries": 3,
-      "numMaxDelayRetries": 0,
-      "numNoDelayRetries": 0,
-      "numMinDelayRetries": 0,
-      "backoffFunction": "linear"
-    },
-    "disableSubscriptionOverrides": false,
-    "defaultThrottlePolicy": {
-      "maxReceivesPerSecond": 1
-    }
-  }
-}
-EOF
+  delivery_policy = "${data.template_file.sns_service_delivery_policy.rendered}"
 }
 
 # provision aws sns topic subscription
@@ -104,13 +95,7 @@ resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
   name        = "AWS-health-Alerts"
   description = "Rule created to pick up any AWS personal health reports and then send to a slack channel via SNS topic and lambda function"
 
-  event_pattern = <<PATTERN
-{
-  "source": [
-    "aws.health"
-  ]
-}
-PATTERN
+  event_pattern = "${data.template_file.service_health_dashboard_cloudwatch_event_pattern.rendered}"
 }
 
 resource "aws_cloudwatch_event_target" "sns" {
