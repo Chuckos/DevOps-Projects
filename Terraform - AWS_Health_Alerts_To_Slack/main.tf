@@ -19,6 +19,11 @@ data "template_file" "lambda_service_policy" {
   template = "${file("${path.module}/templates/lambda_service_policy.json")}"
 }
 
+# rener lambda assume role policy
+data "template_file" "lambda_assume_role_policy" {
+  template = "${file("${path.module}/templates/lambda_assume_role_policy.json")}"
+}
+
 
 # create iam lambda role policy
 resource "aws_iam_role_policy" "lambda_policy" {
@@ -31,23 +36,9 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 # Create lambda role via iam service
 resource "aws_iam_role" "lambda_cloudWatch_access" {
-  name        = "${var.iam_role_name}"
-  description = "${var.iam_role_description}"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+  name               = "${var.iam_role_name}"
+  description        = "${var.iam_role_description}"
+  assume_role_policy = "${data.template_file.lambda_assume_role_policy.rendered}"
 
   tags = {
     cost    = "evrythng"
