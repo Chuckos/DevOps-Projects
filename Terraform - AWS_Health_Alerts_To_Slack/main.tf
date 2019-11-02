@@ -34,6 +34,15 @@ data "template_file" "service_health_dashboard_cloudwatch_event_pattern" {
   template = "${file("${path.module}/templates/service_health_dashboard_cloudwatch_event_pattern.json")}"
 }
 
+locals {
+  # common tags to be assigned to all resources
+  common_tags = {
+    evironment = "prod"
+    project    = "aws health alert"
+    owner      = "Charles Adeeko"
+  }
+}
+
 # create iam lambda role policy
 resource "aws_iam_role_policy" "lambda_policy" {
   name   = "${var.lambda_policy_name}"
@@ -48,11 +57,7 @@ resource "aws_iam_role" "lambda_cloudWatch_access" {
   name               = "${var.iam_role_name}"
   description        = "${var.iam_role_description}"
   assume_role_policy = "${data.template_file.lambda_assume_role_policy.rendered}"
-
-  tags = {
-    cost    = "evrythng"
-    project = "aws-health-alert"
-  }
+  tags               = local.common_tags
 }
 
 # Provision lambda function
@@ -63,6 +68,7 @@ resource "aws_lambda_function" "deploy-lambda" {
   handler          = "lambda_aws_health_check_function.handler"
   source_code_hash = "${data.archive_file.lambda_archive.output_base64sha256}"
   runtime          = "nodejs10.x"
+  tags             = local.common_tags
 }
 
 # allow sns topic to invoke lambda function
@@ -72,7 +78,6 @@ resource "aws_lambda_permission" "with_sns" {
   function_name = "${aws_lambda_function.deploy-lambda.arn}"
   principal     = "sns.amazonaws.com"
   source_arn    = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
-
 }
 
 
@@ -80,6 +85,7 @@ resource "aws_lambda_permission" "with_sns" {
 resource "aws_sns_topic" "aws_personal_health_alerts_notification" {
   name            = "aws-personal-health-alerts-topic"
   delivery_policy = "${data.template_file.sns_service_delivery_policy.rendered}"
+  tags            = local.common_tags
 }
 
 # provision aws sns topic subscription
@@ -92,10 +98,10 @@ resource "aws_sns_topic_subscription" "user_updates_lambda_target" {
 
 # Provision aws cloudwatch event rule with sns topic target
 resource "aws_cloudwatch_event_rule" "service_health_dashboard" {
-  name        = "AWS-health-Alerts"
-  description = "Rule created to pick up any AWS personal health reports and then send to a slack channel via SNS topic and lambda function"
-
+  name          = "AWS-health-Alerts"
+  description   = "Rule created to pick up any AWS personal health reports and then send to a slack channel via SNS topic and lambda function"
   event_pattern = "${data.template_file.service_health_dashboard_cloudwatch_event_pattern.rendered}"
+  tags          = local.common_tags
 }
 
 resource "aws_cloudwatch_event_target" "sns" {
@@ -103,7 +109,3 @@ resource "aws_cloudwatch_event_target" "sns" {
   target_id = "SendToSNS"
   arn       = "${aws_sns_topic.aws_personal_health_alerts_notification.arn}"
 }
-
-
-
-
