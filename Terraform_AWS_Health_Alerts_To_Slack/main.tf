@@ -37,7 +37,7 @@ data "template_file" "service_health_dashboard_cloudwatch_event_pattern" {
 locals {
   # common tags to be assigned to all resources
   common_tags = {
-    Environment = "Production-${var.aws_region}"
+    Environment = "Production"
     Project    = "aws health alert"
     Owner      = "Charles Adeeko"
   }
