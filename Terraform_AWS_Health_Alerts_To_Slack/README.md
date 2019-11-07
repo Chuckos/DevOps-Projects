@@ -1,8 +1,19 @@
+<<<<<<< HEAD
 ## Terraform AWS Health Alerts
+=======
+## AWS Provider Terraform Project
+>>>>>>> a1ec55853a3e7239393094481b32e572b3b48e83
 
 ### Requirements
 * Requires terraform version >= 0.12.9 
 
+<<<<<<< HEAD
+=======
+• CloudWatch events
+• Lambda
+• SNS
+• IAM
+>>>>>>> a1ec55853a3e7239393094481b32e572b3b48e83
 
 This project uses various AWS services and slack with Terraform.  The purpose of this project to capture any AWS personal dashboard health alerts and send this information to a designated slack channel.  The AWS services used are the following:
 
