@@ -1,11 +1,11 @@
 # render lambda service policy json template file
 data "template_file" "lambda_service_policy" {
-  template = file("${path.module}/../templates/lambda_service_policy.json")
+  template = file("${path.module}../../../templates/lambda_service_policy.json")
 }
 
 # render lambda assume role policy
 data "template_file" "lambda_assume_role_policy" {
-  template = file("${path.module}/../templates/lambda_assume_role_policy.json")
+  template = file("${path.module}../../../templates/lambda_assume_role_policy.json")
 }
 
 # create iam lambda role policy

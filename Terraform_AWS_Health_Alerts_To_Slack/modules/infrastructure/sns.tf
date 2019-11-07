@@ -1,6 +1,6 @@
 # render sns service delivery policy
 data "template_file" "sns_service_delivery_policy" {
-  template = file("${path.module}/../templates/sns_service_delivery_policy.json")
+  template = file("${path.module}../../../templates/sns_service_delivery_policy.json")
 }
 
 #provision amazon sns topic

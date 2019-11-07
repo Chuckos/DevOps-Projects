@@ -6,7 +6,7 @@ provider "aws" {
 }
 
 module "infrastructure" {
-  source               = "./infrastructure"
+  source               = "./modules/infrastructure"
   iam_role_name        = var.iam_role_name
   iam_role_description = var.iam_role_description
   lambda_policy_name   = var.lambda_policy_name
