@@ -13,10 +13,10 @@ module "infrastructure" {
 }
 
 module "sns-email-topic" {
-  source = "./modules/sns-email"
-  display_name = "AWS Health Alerts"
+  source          = "./modules/sns-email"
+  display_name    = "AWS Health Alerts"
   email_addresses = ["test@test.com"]
-  stack_name = "unique-sns-stack-name"
+  stack_name      = "unique-sns-stack-name"
 
 }
 
