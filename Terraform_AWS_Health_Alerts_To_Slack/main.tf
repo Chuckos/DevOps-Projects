@@ -12,3 +12,12 @@ module "infrastructure" {
   lambda_policy_name   = var.lambda_policy_name
 }
 
+module "sns-email-topic" {
+  source = "./modules/sns-email"
+  display_name = "AWS Health Alerts"
+  email_addresses = ["test@test.com"]
+  stack_name = "unique-sns-stack-name"
+
+}
+
+

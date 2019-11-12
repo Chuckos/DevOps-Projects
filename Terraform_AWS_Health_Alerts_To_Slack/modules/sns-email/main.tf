@@ -1,7 +1,7 @@
 data "template_file" "cloudformation_sns_stack" {
     template = file("${path.module}../../../templates/email_sns_stack.json")
 
-  vars {
+  vars = {
     display_name  = "${var.display_name}"
     subscriptions = "${join("," , formatlist("{ \"Endpoint\": \"%s\", \"Protocol\": \"%s\"  }", var.email_addresses, var.protocol))}"
   }
