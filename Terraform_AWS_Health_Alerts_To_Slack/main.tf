@@ -15,7 +15,7 @@ module "infrastructure" {
 module "sns-email-topic" {
   source          = "./modules/sns-email"
   display_name    = "AWS Health Alerts"
-  email_addresses = ""
+  email_addresses = "example@email.com"
   stack_name      = "sns-subscription-stack"
   topic_arn       = module.infrastructure.arn-aws-health-topic
 
