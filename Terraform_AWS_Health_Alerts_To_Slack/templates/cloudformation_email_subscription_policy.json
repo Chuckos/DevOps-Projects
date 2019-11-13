@@ -6,18 +6,9 @@
         "Properties" : {
             "Endpoint" : "${subscriptions}",
             "Protocol" : "email",
-            "TopicArn" : {"Ref" : "MySNSTopic" }
+            "TopicArn" : "${topic_arn}"
         }
       }
-    },
-
-    "Outputs" : {
-        "ARN" : {
-            "Description" : "Email SNS Subscription ARN",
-            "Value" : { "Ref" : "EmailSubscription"}
-
-        }
-
     }
 }
 

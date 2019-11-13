@@ -5,7 +5,7 @@ variable "display_name" {
 
 variable "email_addresses" {
     description = "Email address to send notifications to"
-    type = "list"
+    type = string
 }
 
 variable "protocol" {
@@ -18,3 +18,8 @@ variable "stack_name" {
     description = "Unique Cloudformation stack name that wraps the SNS topic"
     type = "string"
 }
+variable "topic_arn" {
+    description = "Topic arn that cloudformation subscription sns will be attached to"
+    type = "string"
+}
+
