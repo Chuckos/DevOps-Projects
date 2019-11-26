@@ -31,7 +31,7 @@ variable "aws_notification_slack_username" {
 variable "aws_notification_slack_channel" {
   description = "The name of the channel in Slack for notifications"
   type        = string
-  default     = "aws_notification_alerts"
+  default     = "aws-notifications"
 }
 
 variable "aws_notification_slack_emoji" {
