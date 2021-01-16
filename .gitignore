@@ -13,3 +13,6 @@ crash.log
 
 # Ignore test file for testing lambda in aws console
 testfile.js
+
+#terraform lock file
+.terraform.lock.*
