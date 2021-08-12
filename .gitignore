@@ -16,3 +16,6 @@ testfile.js
 
 #terraform lock file
 .terraform.lock.*
+
+#key files
+*.pub
