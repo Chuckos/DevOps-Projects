@@ -19,3 +19,4 @@ testfile.js
 
 #key files
 *.pub
+*.pem
