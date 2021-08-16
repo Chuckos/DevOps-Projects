@@ -4,4 +4,5 @@ provider "aws" {
 
 module "ec2module" {
   source = "../ec2-modules/"
+  instance_type = "t2.nano"
 }
