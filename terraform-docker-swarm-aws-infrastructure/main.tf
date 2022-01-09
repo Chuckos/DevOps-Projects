@@ -33,6 +33,7 @@ module "ec2_instance" {
     }
 }
 
+# Add security group to EC2 Module
 
 # Create 3 EC2 for docker swarm example
 # resource "aws_instance" "terraform-ec2" {
