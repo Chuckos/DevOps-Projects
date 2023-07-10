@@ -20,3 +20,6 @@ testfile.js
 #key files
 *.pub
 *.pem
+
+#ignore DS_Store file
+*.DS_Store
